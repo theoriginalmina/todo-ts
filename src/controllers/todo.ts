@@ -1,8 +1,8 @@
 import { Response } from "express";
-import Todo from "../models/todo";
+import { validationResult } from "express-validator";
 import { HydratedDocument } from "mongoose";
 import { ITodo, TodoRequest } from "../interfaces";
-import { validationResult } from "express-validator";
+import Todo from "../models/todo";
 
 export const addTodo = async (req: TodoRequest, res: Response) => {
   const errors = validationResult(req);
@@ -43,7 +43,7 @@ export const updateTodo = async (req: TodoRequest, res: Response) => {
 
   if (!todo) {
     return res.status(404).json({
-      message: "Todo is not exists"
+      message: "Todo was not found"
     });
   }
 
@@ -74,7 +74,7 @@ export const deleteTodo = async (req: TodoRequest, res: Response) => {
 
   if (!todo) {
     return res.status(404).json({
-      message: "Todo is not exists"
+      message: "Todo was not found"
     });
   }
 
@@ -103,7 +103,7 @@ export const getTodo = async (req: TodoRequest, res: Response) => {
 
   if (!todo) {
     return res.status(404).json({
-      message: "Todo not found"
+      message: "Todo was not found"
     });
   }
 

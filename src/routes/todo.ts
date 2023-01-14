@@ -1,7 +1,7 @@
 import express from "express";
-import { isAuth } from "../middlewares/isAuth";
-import { addTodo, updateTodo, deleteTodo, getTodo } from "../controllers/todo";
 import { body, param } from "express-validator";
+import { addTodo, deleteTodo, getTodo, updateTodo } from "../controllers/todo";
+import { isAuth } from "../middlewares/isAuth";
 
 const router = express.Router();
 
@@ -29,13 +29,13 @@ router.put(
   updateTodo
 );
 
-router.delete("/:todoId", isAuth, deleteTodo);
-
 router.get(
   "/:todoId",
   isAuth,
   param("todoId").isLength({ min: 24, max: 24 }),
   getTodo
 );
+
+router.delete("/:todoId", isAuth, deleteTodo);
 
 export default router;

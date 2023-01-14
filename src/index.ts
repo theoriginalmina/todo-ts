@@ -18,7 +18,7 @@ app.use(cors());
 mongoose.set("strictQuery", false);
 mongoose
   .connect(mongoUrl)
-  .then(() => console.log("Connected!"))
+  .then(() => console.log("Connected successfully To MongoDB"))
   .catch((err) => {
     console.log(err);
   });

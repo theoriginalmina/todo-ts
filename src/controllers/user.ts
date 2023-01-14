@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
 import { hash, verify } from "argon2";
-import User from "../models/user";
-import { HydratedDocument } from "mongoose";
+import { Request, Response } from "express";
 import { validationResult } from "express-validator";
+import { HydratedDocument } from "mongoose";
+import { IUser, UserRequest } from "../interfaces";
+import User from "../models/user";
 
 declare module "express-session" {
   interface SessionData {
@@ -10,19 +11,7 @@ declare module "express-session" {
   }
 }
 
-declare module "express" {
-  interface Request {
-    body: {
-      email: string;
-      password: string;
-    };
-  }
-}
-
-export const registerUser = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const registerUser = async (req: UserRequest, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -49,7 +38,7 @@ export const registerUser = async (
   });
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: UserRequest, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -67,14 +56,28 @@ export const loginUser = async (req: Request, res: Response) => {
   const valid = await verify(user.password, password);
 
   if (!valid) {
-    return res.status(403).json({
+    return res.status(401).json({
       error: "Wrong Password"
     });
   }
+  const userId = JSON.stringify(user._id).replace(/"/g, "");
+  req.session.userId = userId;
 
-  req.session.userId = JSON.stringify(user._id);
   return res.status(200).json({
-    id: user._id,
+    id: userId,
     email: user.email
+  });
+};
+
+export const logoutUser = (req: Request, res: Response) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(400).json({
+        message: err.message
+      });
+    }
+    return res.status(200).json({
+      message: "Logged out successfully"
+    });
   });
 };

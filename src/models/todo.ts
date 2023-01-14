@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
+import { ITodo } from "../interfaces";
 
 const Schema = mongoose.Schema;
 
-interface ITodo {
-	title: string;
-	description: string;
-}
-
 const TodoSchema = new Schema<ITodo>({
-	title: {
-		type: String,
-		required: true,
-	},
-	description: {
-		type: String,
-	},
+  userId: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String
+  }
 });
 
 const Todo = mongoose.model("todo", TodoSchema);

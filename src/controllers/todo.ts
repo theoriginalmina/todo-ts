@@ -111,3 +111,19 @@ export const getTodo = async (req: TodoRequest, res: Response) => {
     todo
   });
 };
+
+export const getAllTodos = async (req: TodoRequest, res: Response) => {
+  const { userId } = req.session;
+
+  const todos = await Todo.find({ userId });
+
+  if (todos.length === 0) {
+    return res.status(404).json({
+      message: "Not todos where found"
+    });
+  }
+
+  return res.status(200).json({
+    todos
+  });
+};

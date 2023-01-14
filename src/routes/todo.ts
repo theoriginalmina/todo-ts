@@ -1,6 +1,12 @@
 import express from "express";
 import { body, param } from "express-validator";
-import { addTodo, deleteTodo, getTodo, updateTodo } from "../controllers/todo";
+import {
+  addTodo,
+  deleteTodo,
+  getTodo,
+  updateTodo,
+  getAllTodos
+} from "../controllers/todo";
 import { isAuth } from "../middlewares/isAuth";
 
 const router = express.Router();
@@ -29,6 +35,8 @@ router.put(
   updateTodo
 );
 
+router.delete("/:todoId", isAuth, deleteTodo);
+
 router.get(
   "/:todoId",
   isAuth,
@@ -36,6 +44,6 @@ router.get(
   getTodo
 );
 
-router.delete("/:todoId", isAuth, deleteTodo);
+router.get("/", isAuth, getAllTodos);
 
 export default router;
